@@ -1,29 +1,16 @@
-ansible-haproxy-keepalived
+osm_haproxy
 ==========================
 
-A playbook building high availability Load Balancer with HAProxy and keepalived.
-
-## Requirements
-
-- [VirtualBox](https://www.virtualbox.org/wiki/Downloads). Tested on 4.3.x.
-- [Vagrant](http://www.vagrantup.com/downloads.html). Tested on 1.6.3
-- [Ansible](http://docs.ansible.com/intro_installation.html). Tested on 1.7.1 
+A playbook building high availability Load Balancer with HAProxy.
 
 ## Overview
 
 It will install high availability Load Balancer with HAProxy and keepalived.
 You can customize it by edit vars file.
-Tested on Ubuntu 14.04 Trusty and CentOS 6.5.
 
 ## Usage
 
 - Edit vars/main.yml
-
-- Test on Vagrant virtual machine(Requires Ansible).
-
-```bash
-$ vagrant up
-```
 
 - Install to remote server.
 
@@ -41,13 +28,41 @@ ansible-playbook site.yml -i ansible_hosts
 
 ## vars
 
-```vars/main.yml
-haproxy_user: haproxy
-haproxy_major_version: 1.5
-haproxy_minor_version: 8
-haproxy_download_url: "http://www.haproxy.org/download/{{ haproxy_major_version }}/src/haproxy-{{ haproxy_major_version }}.{{ haproxy_minor_version }}.tar.gz"
-haproxy_src_dir: /tmp
-haproxy_make_option: TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
+```# haproxy settings.
+haproxyUser: haproxy
+haproxyGroup: haproxy
+
+# Frontend settings.
+haproxyFrontendName: 'main'
+haproxyFrontendPort: "8090"
+bindPort: '443'
+backend: "app"	
+
+# stats settings.
+statsPort: "5000"
+statsAdminUser: "admin"
+statsAdminPassword: "lybrate@123"
+statsURI: "/haproxy_stats"
+
+# Backend settings.
+
+sslCertPath: "sslCertPath"
+loadBalancingAlgorithm: "roundrobin"
+healthCheckProto: "HTTPS"
+healthCheckPort: "8443"
+modeVar: "http"
+
+# Backend servers.
+appName1: "phoenix1"
+host1: "192.168.0.54"
+appName2: "phoenix2"
+host2: "192.168.0.99"
+appName3: "phoenix3"
+host3: "192.169.0.88"
+hostPort1: "8443"
+healthCheckInterval: "12000"
+fallValue: "7"
+riseValue: "2
 ```
 
 ## Contributing
