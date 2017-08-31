@@ -73,7 +73,8 @@ option forwardfor
 #-------------------------------------------------
 # HAproxy stats
 #-------------------------------------------------
-listen stats :{{statsPort}}
+listen stats 
+    bind 0.0.0.0:{{statsPort}}
     stats enable
     stats uri /
     stats hide-version
